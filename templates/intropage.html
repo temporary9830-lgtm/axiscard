@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Axis Bank Portal</title>
+  <style>
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    body {
+      background: #ffffff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .splash-logo {
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 1.8s infinite ease-in-out;
+    }
+
+    .splash-logo svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.96); opacity: 0.9; }
+      50% { transform: scale(1.04); opacity: 1; }
+      100% { transform: scale(0.96); opacity: 0.9; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="splash-logo">
+    <!-- Exact Axis Bank Logo Geometry -->
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Left Angled Pillar -->
+      <polygon points="46,6 59,25 29,75 16,75" fill="#AE386B"/>
+      <!-- Right Horizontal Quadrilateral -->
+      <polygon points="48,46 64,46 76,75 50,75" fill="#AE386B"/>
+    </svg>
+  </div>
+
+<script>
+  // Redirect to home page after 3 seconds
+  setTimeout(() => {
+    window.location.href = "{% url 'home' %}";
+  }, 3000);
+</script>
+
+</body>
+</html>

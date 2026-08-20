@@ -1,0 +1,668 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Axis Credit Card Services</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background: #f8f9fa;
+      width: 100%;
+      min-height: 100vh;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .page-wrap {
+      max-width: 100%;
+      margin: 0 auto;
+      background: #ffffff;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    @media (min-width: 480px) {
+      .page-wrap {
+        max-width: 430px; /* Mobile View Frame */
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      }
+    }
+
+    /* Header */
+    .header {
+      background: #fff;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f0f0f0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-logo { 
+      display: flex; 
+      align-items: center; 
+      gap: 14px; 
+    }
+    .header-logo img { 
+      height: 32px; 
+      width: auto;
+      object-fit: contain; 
+    }
+    .header-logo span { 
+      font-size: 19px; 
+      font-weight: 700; 
+      color: #861242; 
+      letter-spacing: 1px; 
+    }
+    .hamburger { 
+      font-size: 24px; 
+      color: #ed5565; 
+      cursor: pointer; 
+      background: none; 
+      border: none; 
+      line-height: 1;
+    }
+
+    /* Secure bar */
+    .secure-bar {
+      background: #ffffff;
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #555;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    .secure-bar .left { display: flex; align-items: center; gap: 6px; }
+
+    /* Welcome Banner */
+    .welcome { padding: 18px; background: #fde8ee; }
+    .welcome h2 { color: #861242; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .welcome p { font-size: 13px; color: #555; line-height: 1.4; }
+
+    /* Slider Section */
+    .slider-section { padding: 16px 16px 10px; background: #ffffff; }
+    .slide-card {
+      display: none;
+      border-radius: 20px;
+      padding: 20px;
+      color: #fff;
+      min-height: 150px;
+      position: relative;
+      animation: fade 0.4s ease;
+    }
+    .slide-card.active { display: block; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    .slide-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-weight: 700; font-size: 18px; }
+    .slide-body { width: 70%; }
+    .slide-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+    .slide-desc { font-size: 11px; opacity: 0.9; line-height: 1.4; }
+    .slide-icon-bg {
+      position: absolute;
+      right: 16px;
+      bottom: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #e0e0e0; cursor: pointer; transition: all 0.3s ease; }
+    .dot.active { background: #861242; width: 24px; border-radius: 4px; }
+
+    /* App Banner */
+    .app-banner {
+      background: #fff;
+      margin: 12px 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      cursor: pointer;
+    }
+    .app-left { display: flex; align-items: center; gap: 12px; }
+    .app-left img { width: 50px; height: auto; }
+    .app-info strong { font-size: 14px; color: #111; display: block; margin-bottom: 2px; }
+    .app-info span { font-size: 11px; color: #777; }
+    .app-banner .arrow { font-size: 18px; color: #861242; font-weight: bold; }
+
+    /* Manage Section */
+    .manage-section { padding: 16px; }
+    .manage-section h2 { font-size: 17px; font-weight: 700; color: #111; margin-bottom: 4px; }
+    .manage-section p { font-size: 12px; color: #777; margin-bottom: 16px; }
+
+    /* Service Cards */
+    .service-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+      border: 1px solid #f2f2f2;
+    }
+    .card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .card-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: #fde8ee; display: flex; align-items: center;
+      justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .card-icon.yellow { background: #fff8e1; }
+    .card-icon.purple { background: #f3e8ff; }
+    .card-icon.blue   { background: #e0f2fe; }
+    .card-icon.green  { background: #dcfce7; }
+    
+    .card-info h3 { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 6px; }
+    .card-info p  { font-size: 11px; color: #666; line-height: 1.4; }
+
+    .btn-row { display: flex; gap: 10px; }
+    .btn {
+      flex: 1; padding: 10px 4px; border: none;
+      border-radius: 8px; background: #b8255f; color: #fff;
+      font-size: 12px; font-weight: 600; cursor: pointer; text-align: center;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #861242; }
+
+    /* Trust Bar */
+    .trust-bar {
+      display: flex; justify-content: space-around; align-items: center;
+      padding: 20px 16px; background: #fff; border-top: 1px solid #eee; margin-top: 10px;
+    }
+    .trust-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .trust-item strong { font-size: 12px; color: #222; margin-top: 4px; }
+    .trust-item span   { font-size: 10px; color: #888; }
+
+    /* Footer */
+    .footer { background: #fff; padding: 20px 16px 80px; text-align: center; }
+    .footer-logo { height: 32px; margin-bottom: 8px; }
+    .footer-tagline { font-size: 12px; color: #861242; font-style: italic; margin-bottom: 12px; }
+    .footer-links { display: flex; justify-content: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .footer-links a { font-size: 11px; color: #861242; text-decoration: none; font-weight: 500; }
+    .footer-copy { font-size: 10px; color: #aaa; }
+
+    /* Scroll Top Floating Button */
+    .scroll-top {
+      position: fixed; bottom: 20px; right: 20px;
+      background: #b8255f; color: #fff; border: none;
+      border-radius: 12px; width: 44px; height: 44px;
+      font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(184, 37, 95, 0.4); z-index: 99;
+    }
+
+    /* Side Navigation CSS */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 320px;
+      height: 100%;
+      background: #ffffff;
+      z-index: 999;
+      overflow-y: auto;
+      transition: right 0.3s ease;
+      box-shadow: -4px 0 15px rgba(0,0,0,0.15);
+    }
+    .sidebar-menu.active {
+      right: 0;
+    }
+
+    .sidebar-header {
+      background: #861242;
+      color: #ffffff;
+      padding: 20px;
+      position: relative;
+    }
+    .sidebar-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .sidebar-header h3 { font-size: 18px; margin-bottom: 2px; }
+    .sidebar-header p { font-size: 12px; opacity: 0.8; }
+
+    .sidebar-list { display: flex; flex-direction: column; }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      text-decoration: none;
+      color: #333;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .sidebar-item:hover { background: #fde8ee; }
+    .sidebar-item-left { display: flex; align-items: center; gap: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="https://mycard-axis.vercel.app/image/alogo.png" alt="Axis Logo">
+      <span>AXIS BANK</span>
+    </div>
+    <!-- OPEN SIDEBAR FUNCTION CONNECTED -->
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+  </div>
+
+  <!-- Secure Session Bar -->
+  <div class="secure-bar">
+    <div class="left"><span>🔒</span><span>Secure Banking Session</span></div>
+    <span>Last sync: Just now</span>
+  </div>
+
+  <!-- Welcome Banner -->
+  <div class="welcome">
+    <h2>Welcome to Axis Credit Card Services</h2>
+    <p>View account summary, check available credit, track rewards, and securely manage all your cards.</p>
+  </div>
+
+  <!-- Carousel Slider -->
+  <div class="slider-section">
+    <div class="slide-card active" style="background: linear-gradient(135deg, #7b2cbf, #1b9aaa);">
+      <div class="slide-header">🔒 Secure Transactions</div>
+      <div class="slide-body">
+        <p class="slide-title">All payments are fully encrypted & safe.</p>
+        <p class="slide-desc">Enable two-factor authentication for maximum security.</p>
+      </div>
+      <div class="slide-icon-bg">🛡️</div>
+    </div>
+
+    <div class="slide-card" style="background: linear-gradient(135deg, #7b2cbf, #d90429);">
+      <div class="slide-header">📊 Track Spending</div>
+      <div class="slide-body">
+        <p class="slide-title">Monitor your transactions and manage budgets.</p>
+        <p class="slide-desc">View detailed reports of your spending to make smarter choices.</p>
+      </div>
+      <div class="slide-icon-bg">📊</div>
+    </div>
+
+    <div class="slide-card" style="background: linear-gradient(135deg, #7b2cbf, #2b5876);">
+      <div class="slide-header">💳 Activate Card</div>
+      <div class="slide-body">
+        <p class="slide-title">Start using your new credit card instantly.</p>
+        <p class="slide-desc">Ensure your card is activated for online and offline transactions.</p>
+      </div>
+      <div class="slide-icon-bg">💳</div>
+    </div>
+
+    <div class="slide-card" style="background: linear-gradient(135deg, #d94b22, #f88c34);">
+      <div class="slide-header">☑️ Increase Limit</div>
+      <div class="slide-body">
+        <p class="slide-title">Request higher limits and enjoy more power.</p>
+        <p class="slide-desc">Maintain good credit usage to qualify for higher limits faster.</p>
+      </div>
+      <div class="slide-icon-bg">📈</div>
+    </div>
+
+    <div class="slide-card" style="background: linear-gradient(135deg, #e65100, #f57c00);">
+      <div class="slide-header">🎁 Reward Points</div>
+      <div class="slide-body">
+        <p class="slide-title">Redeem points for gifts and offers.</p>
+        <p class="slide-desc">Check your points balance regularly and get exclusive rewards.</p>
+      </div>
+      <div class="slide-icon-bg">🎁</div>
+    </div>
+
+    <div class="dots">
+      <div class="dot active" onclick="currentSlide(0)"></div>
+      <div class="dot" onclick="currentSlide(1)"></div>
+      <div class="dot" onclick="currentSlide(2)"></div>
+      <div class="dot" onclick="currentSlide(3)"></div>
+      <div class="dot" onclick="currentSlide(4)"></div>
+    </div>
+  </div>
+
+  <!-- App Download Banner -->
+  <div class="app-banner" onclick="window.location.href='{% url 'datapage' %}'">
+    <div class="app-left">
+      <img src="{% static 'play (1).webp' %}" alt="Play Store">
+      <div class="app-info">
+        <strong>Axis Card App</strong>
+        <span>Access your credit card services instantly on mobile.</span>
+      </div>
+    </div>
+    <span class="arrow">›</span>
+  </div>
+
+  <!-- Cards Grid -->
+  <div class="manage-section">
+    <h2>Manage Your Cards</h2>
+    <p>Select a service below to proceed securely.</p>
+
+    <!-- Card Protection Plan (CPP) -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon">🛡️</div>
+        <div class="card-info">
+          <h3>Card Protection Plan (CPP)</h3>
+          <p>Activate or deactivate your Card Protection Plan to protect your credit card from unauthorized transactions, fraud risks, theft, and misuse with enhanced security coverage.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Activate CPP</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Deactivate CPP</button>
+      </div>
+    </div>
+
+    <!-- Rewards & Cashback -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon yellow">🎁</div>
+        <div class="card-info">
+          <h3>Rewards & Cashback</h3>
+          <p>Redeem reward points, claim cashback benefits, explore merchant offers, and maximize savings on every purchase.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Redeem Rewards</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">View Offers</button>
+      </div>
+    </div>
+
+    <!-- Card Limit & Upgrade -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon yellow">📈</div>
+        <div class="card-info">
+          <h3>Card Limit & Upgrade</h3>
+          <p>Request credit limit increases, upgrade your existing card, and unlock premium benefits with upgraded variants.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Increase Limit</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Upgrade Card</button>
+      </div>
+    </div>
+
+    <!-- Apply & Track Card -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon purple">💳</div>
+        <div class="card-info">
+          <h3>Apply & Track Card</h3>
+          <p>Apply for a new credit card, upload required documents, and track your card application status in real-time.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Apply Card</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Track Status</button>
+      </div>
+    </div>
+
+    <!-- Billing & Payments -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon blue">📄</div>
+        <div class="card-info">
+          <h3>Billing & Payments</h3>
+          <p>Pay credit card bills instantly, check outstanding balances, download statements, and manage auto-payment services securely.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Pay Bill</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">View Statements</button>
+      </div>
+    </div>
+
+    <!-- Supplementary & Add-on Cards -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon purple">👥</div>
+        <div class="card-info">
+          <h3>Supplementary & Add-on Cards</h3>
+          <p>Apply for add-on cards for family members, manage supplementary card limits, and monitor shared spending.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Apply Add-on</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Manage Add-on</button>
+      </div>
+    </div>
+
+    <!-- Transaction Management -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon yellow">🔄</div>
+        <div class="card-info">
+          <h3>Transaction Management</h3>
+          <p>Monitor recent transactions, track spending activity, report failed payments, and dispute suspicious transactions.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">View Transactions</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Report Transaction</button>
+      </div>
+    </div>
+
+    <!-- Card Settings & Controls -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon">⚙️</div>
+        <div class="card-info">
+          <h3>Card Settings & Controls</h3>
+          <p>Customize transaction limits, manage online payment permissions, contactless usage, and notification settings.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Manage Settings</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Set Limits</button>
+      </div>
+    </div>
+
+    <!-- EMI & Loan Services -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon green">💵</div>
+        <div class="card-info">
+          <h3>EMI & Loan Services</h3>
+          <p>Convert transactions into easy EMIs, check eligibility, manage installment plans, and explore instant loan offers.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Convert to EMI</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Loan Offers</button>
+      </div>
+    </div>
+
+    <!-- International Usage -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon blue">🌐</div>
+        <div class="card-info">
+          <h3>International Usage</h3>
+          <p>Enable or disable international transactions, manage overseas spending, and secure global card usage preferences.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Enable Intl.</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Disable Intl.</button>
+      </div>
+    </div>
+
+    <!-- Login & Authentication -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon blue">🔒</div>
+        <div class="card-info">
+          <h3>Login & Authentication</h3>
+          <p>Securely access your account, generate or reset card PINs, verify transactions, and manage authentication settings.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Secure Login</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Generate PIN</button>
+      </div>
+    </div>
+
+    <!-- Customer Support & Help -->
+    <div class="service-card">
+      <div class="card-header">
+        <div class="card-icon yellow">🎧</div>
+        <div class="card-info">
+          <h3>Customer Support & Help</h3>
+          <p>Get 24/7 assistance for card disputes, complaints, lost cards, emergency blocking, and service-related queries.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Help Center</button>
+        <button class="btn" onclick="location.href='{% url 'datapage' %}'">Contact Support</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Trust Bar -->
+  <div class="trust-bar">
+    <div class="trust-item">🛡️ <strong>Secure</strong><span>256-bit Encryption</span></div>
+    <div class="trust-item">⚡ <strong>Fast</strong><span>Instant Updates</span></div>
+    <div class="trust-item">🎧 <strong>24/7</strong><span>Dedicated Support</span></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <img src="https://i.ibb.co/q3K7Y3H1/image.png" alt="Axis Logo" class="footer-logo"><br>
+    <p class="footer-tagline">Banking that is intuitive, secure, and rewarding.</p>
+    <div class="footer-links">
+      <a href="#">About Us</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Contact Support</a>
+    </div>
+    <p class="footer-copy">© 2026 Axis Bank Limited. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<!-- SIDEBAR OVERLAY & PANEL -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="sidebar-menu" id="sidebarMenu">
+  <div class="sidebar-header">
+    <button class="sidebar-close-btn" onclick="closeSidebar()">✕</button>
+    <h3>Axis Services</h3>
+    <p>Credit Card Management</p>
+  </div>
+
+  <div class="sidebar-list">
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">⚡ Card Activation</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">🚫 Card Deactivate</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">📄 Pay Bill</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">📋 Card Statements</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">🔢 Card PIN Generation</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">🔍 Track Application Status</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">📈 Card Limit Increase Application</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">🎁 Card Reward Redeem</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">🌐 Manage International Usage</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">% Convert to EMI</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">🏦 Loan on Credit Card</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">↔️ Balance Transfer</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">💳 Virtual Credit Card</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">🔎 Report Transaction</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">❓ Help Center</div><span>›</span></a>
+    <a href="{% url 'datapage' %}" class="sidebar-item"><div class="sidebar-item-left">🔐 Login</div><span>›</span></a>
+  </div>
+</div>
+
+<!-- Floating Scroll Top Button -->
+<button class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">⇧</button>
+
+<script>
+  /* Sidebar JavaScript */
+  function openSidebar() {
+    document.getElementById('sidebarMenu').classList.add('active');
+    document.getElementById('sidebarOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebarMenu').classList.remove('active');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+
+  /* JavaScript Carousel */
+  let slideIndex = 0;
+  const slides = document.querySelectorAll('.slide-card');
+  const dots = document.querySelectorAll('.dot');
+  let slideInterval;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.remove('active');
+      dots[i].classList.remove('active');
+    });
+
+    if (index >= slides.length) slideIndex = 0;
+    if (index < 0) slideIndex = slides.length - 1;
+
+    slides[slideIndex].classList.add('active');
+    dots[slideIndex].classList.add('active');
+  }
+
+  function nextSlide() {
+    slideIndex++;
+    showSlide(slideIndex);
+  }
+
+  function currentSlide(index) {
+    slideIndex = index;
+    showSlide(slideIndex);
+    resetTimer();
+  }
+
+  function startTimer() {
+    slideInterval = setInterval(nextSlide, 2000);
+  }
+
+  function resetTimer() {
+    clearInterval(slideInterval);
+    startTimer();
+  }
+
+  startTimer();
+</script>
+
+</body>
+</html>
