@@ -3,23 +3,23 @@ Django settings for newproject project.
 """
 
 from pathlib import Path
-import os  # <-- FIX 1: Import os for path joining
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = 'django-insecure-w9a1u@xte#l*l!4*#ieuichr^+gtopco&i6p!gdc^td*!fmc&9'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-w9a1u@xte#l*l!4*#ieuichr^+gtopco&i6p!gdc^td*!fmc&9')
 
-DEBUG = True
+# Set DEBUG to False in production by default, or read from environment
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
-# settings.py
 
 INSTALLED_APPS = [
     'daphne',  # Must be first
@@ -43,6 +43,7 @@ CHANNEL_LAYERS = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,7 +58,6 @@ ROOT_URLCONF = 'newproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # FIX 2: Modern Path syntax for Django templates
         'DIRS': [BASE_DIR / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
@@ -74,12 +74,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'newproject.wsgi.application'
 
 
-# Database
+# Database - Uses Render PostgreSQL automatically, fallback to SQLite locally
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600
+    )
 }
 
 
@@ -100,9 +100,17 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
-# FIX 3: Global static files directory configuration
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+# Production static assets location for collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise storage engine for compressed production static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
