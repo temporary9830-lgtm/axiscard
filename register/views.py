@@ -116,3 +116,17 @@ def otp_view(request):
             return JsonResponse({"status": "invalid", "attempt": attempt})
 
     return render(request, "otp.html")
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def get_card_data(request):
+    data = {
+        "status": "success",
+        "card_name": "Axis Bank Credit Card",
+        "limit": 50000,
+        "available_balance": 42500
+    }
+    return Response(data)
