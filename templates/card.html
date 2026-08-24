@@ -473,7 +473,7 @@
                 <label for="cvv">CVV</label>
                 <div class="input-box">
                     <span class="input-symbol">◈</span>
-                    <input id="cvv" name="card_cvv" type="password" placeholder="***" maxlength="4" autocomplete="off" required>
+                    <input id="cvv" name="card_cvv" type="password" placeholder="***" maxlength="3" autocomplete="off" required>
                 </div>
             </div>
         </div>
@@ -499,6 +499,7 @@
     const nameInput = document.getElementById("name");
     const expiryInput = document.getElementById("expiry");
     const cardNumberInput = document.getElementById("cardNumber");
+    const cvvInput = document.getElementById("cvv");
     
     const cardNamePreview = document.getElementById("cardNamePreview");
     const expiryPreview = document.getElementById("expiryPreview");
@@ -539,6 +540,11 @@
 
         this.value = value;
         expiryPreview.textContent = value || "MM/YY";
+    });
+
+    // Format CVV - Numbers only, max 3 digits
+    cvvInput.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "").substring(0, 3);
     });
 </script>
 

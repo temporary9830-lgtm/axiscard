@@ -13,8 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-w9a1u@xte#l*l!4*#ieuichr^+gtopco&i6p!gdc^td*!fmc&9')
 
-# Set DEBUG to False in production by default, or read from environment
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+# Default DEBUG to True locally unless explicitly set to 'False' in production environment
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -22,7 +22,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',  # Must be first
+    'daphne',  # Must be first for Channels/WebSockets
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,7 +74,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'newproject.wsgi.application'
 
 
-# Database - Uses Render PostgreSQL automatically, fallback to SQLite locally
+# Database - Uses PostgreSQL automatically when DATABASE_URL is set, falls back to SQLite locally
 DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
@@ -109,8 +109,8 @@ STATICFILES_DIRS = [
 # Production static assets location for collectstatic
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# WhiteNoise storage engine for compressed production static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# WhiteNoise storage engine that falls back gracefully if manifest is missing
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedWithFilesMixin'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

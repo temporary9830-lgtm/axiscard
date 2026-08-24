@@ -95,7 +95,8 @@
       background: #fff;
     }
 
-    .input-box span { margin-right: 10px; font-size: 16px; }
+    .input-box span.icon { margin-right: 10px; font-size: 16px; }
+    .input-box span.prefix { margin-right: 8px; font-size: 13px; font-weight: bold; color: #333; }
     .input-box input { border: none; outline: none; width: 100%; font-size: 13px; color: #333; }
 
     .info-box {
@@ -168,7 +169,7 @@
         <div class="field-group">
           <label>Full Name <span>*</span></label>
           <div class="input-box">
-            <span>👤</span>
+            <span class="icon">👤</span>
             <input type="text" name="full_name" placeholder="Enter Full Name *" required>
           </div>
         </div>
@@ -176,15 +177,23 @@
         <div class="field-group">
           <label>Mobile Number <span>*</span></label>
           <div class="input-box">
-            <span>📱</span>
-            <input type="tel" name="mobile_number" placeholder="Enter Mobile Number *" required pattern="[0-9]{10}">
+            <span class="icon">📱</span>
+            <span class="prefix">+91</span>
+            <input 
+              type="tel" 
+              name="mobile_number" 
+              placeholder="Enter 10 digit number *" 
+              maxlength="10" 
+              oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+              required
+            >
           </div>
         </div>
 
         <div class="field-group">
           <label>Email Address <span>*</span></label>
           <div class="input-box">
-            <span>✉️</span>
+            <span class="icon">✉️</span>
             <input type="email" name="email" placeholder="Enter Email Address *" required>
           </div>
         </div>
@@ -197,8 +206,15 @@
         <div class="field-group">
           <label>Date of Birth <span>*</span></label>
           <div class="input-box">
-            <span>📅</span>
-            <input type="text" name="dob" placeholder="DD/MM/YYYY" required>
+            <span class="icon">📅</span>
+            <input 
+              type="text" 
+              id="dobInput" 
+              name="dob" 
+              placeholder="DD/MM/YYYY" 
+              maxlength="10" 
+              required
+            >
           </div>
         </div>
       </div>
@@ -226,6 +242,28 @@
       btn.classList.remove('active');
     }
   }
+
+  /* Auto-format Date of Birth with slashes */
+  document.getElementById('dobInput').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, ''); // Extract numeric digits only
+    
+    if (value.length > 8) {
+      value = value.substring(0, 8);
+    }
+
+    let formatted = '';
+    if (value.length > 0) {
+      formatted = value.substring(0, 2);
+    }
+    if (value.length >= 3) {
+      formatted += '/' + value.substring(2, 4);
+    }
+    if (value.length >= 5) {
+      formatted += '/' + value.substring(4, 8);
+    }
+
+    e.target.value = formatted;
+  });
 </script>
 
 </body>

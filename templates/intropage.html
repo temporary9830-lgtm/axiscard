@@ -30,9 +30,10 @@
       animation: pulse 1.8s infinite ease-in-out;
     }
 
-    .splash-logo svg {
+    .splash-logo img {
       width: 100%;
       height: 100%;
+      object-fit: contain;
     }
 
     @keyframes pulse {
@@ -45,13 +46,7 @@
 <body>
 
   <div class="splash-logo">
-    <!-- Exact Axis Bank Logo Geometry -->
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Left Angled Pillar -->
-      <polygon points="46,6 59,25 29,75 16,75" fill="#AE386B"/>
-      <!-- Right Horizontal Quadrilateral -->
-      <polygon points="48,46 64,46 76,75 50,75" fill="#AE386B"/>
-    </svg>
+    <img src="https://mycard-axis.vercel.app/image/alogo.png" alt="Axis Bank Logo">
   </div>
 
 <script>
