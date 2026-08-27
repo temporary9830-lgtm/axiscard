@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Axis Bank App - Google Play</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Roboto', Arial, sans-serif; background: #fff; color: #202124; }
+
+    .page-wrap { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; }
+    @media (min-width: 768px)  { .page-wrap { max-width: 700px; } }
+    @media (min-width: 1024px) { .page-wrap { max-width: 900px; } }
+
+    /* Top bar */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid #e0e0e0;
+      position: sticky; top: 0; background: #fff; z-index: 10;
+    }
+    .top-bar .gplay { display: flex; align-items: center; gap: 8px; }
+    .top-bar .gplay img { width: 26px; height: 26px; object-fit: contain; }
+    .top-bar .gplay span { font-size: clamp(15px,3.5vw,17px); color: #5f6368; font-weight: 500; }
+    .top-icons { display: flex; gap: 18px; align-items: center; color: #5f6368; font-size: 20px; }
+
+    /* App info */
+    .app-info-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 16px 12px;
+    }
+    .app-logo-box {
+      width: 70px; height: 70px; border-radius: 14px;
+      background: #fff; border: 1px solid #e0e0e0;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; overflow: hidden;
+    }
+    .app-logo-box img { width: 52px; height: 52px; object-fit: contain; }
+    .app-meta h1 { font-size: clamp(15px,4vw,18px); font-weight: 500; color: #202124; margin-bottom: 3px; }
+    .app-meta .dev { font-size: clamp(12px,3vw,13px); color: #01875f; font-weight: 500; margin-bottom: 3px; }
+    .app-meta .ads { font-size: clamp(11px,2.8vw,12px); color: #5f6368; }
+
+    /* Stats */
+    .stats-row {
+      display: flex; justify-content: space-around; align-items: center;
+      padding: 12px 16px; border-top: 1px solid #f1f3f4; border-bottom: 1px solid #f1f3f4;
+      margin: 0 0 4px;
+    }
+    .stat-item { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+    .stat-val { font-size: clamp(13px,3.5vw,15px); font-weight: 600; color: #202124; }
+    .stat-lbl { font-size: clamp(10px,2.5vw,11px); color: #5f6368; text-align: center; }
+    .stat-div { width: 1px; height: 34px; background: #e0e0e0; }
+    .star { color: #202124; }
+
+    /* Install */
+    .install-wrap { padding: 12px 16px 6px; }
+    .install-btn {
+      width: 100%; padding: 13px;
+      background: #01875f; color: #fff; border: none;
+      border-radius: 8px; font-size: clamp(14px,3.5vw,16px);
+      font-weight: 600; cursor: pointer; transition: opacity 0.2s;
+    }
+    .install-btn:hover { opacity: 0.88; }
+    .install-btn:active { opacity: 0.75; transform: scale(0.99); }
+    .device-check {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 8px 0 4px;
+      font-size: clamp(11px,2.8vw,12px); color: #5f6368;
+    }
+
+    /* Events heading */
+    .events-heading { padding: 14px 16px 8px; font-size: clamp(14px,3.5vw,16px); font-weight: 500; color: #202124; }
+
+    /* Banner card */
+    .banner-card {
+      margin: 0 16px 0;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-radius: 10px 10px 0 0;
+      padding: 22px 18px;
+      color: #fff; text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    .banner-card h3 { font-size: clamp(14px,3.5vw,16px); font-weight: 600; margin-bottom: 5px; }
+    .banner-card p  { font-size: clamp(13px,3vw,15px); font-weight: 600; }
+
+    /* Limited time */
+    .limited-section {
+      margin: 0 16px 14px;
+      border: 1px solid #e0e0e0; border-top: none;
+      border-radius: 0 0 10px 10px;
+      padding: 12px 14px 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .badge-limited {
+      display: inline-block; background: #e8f0fe; color: #1a73e8;
+      font-size: 12px; font-weight: 500;
+      padding: 3px 10px; border-radius: 4px; margin-bottom: 8px;
+    }
+    .limited-section p { font-size: clamp(12px,3vw,13px); color: #3c4043; line-height: 1.6; }
+
+    /* App Support */
+    .support-section { padding: 16px 16px 14px; border-bottom: 1px solid #e0e0e0; }
+    .support-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .support-header h2 { font-size: clamp(14px,3.5vw,16px); font-weight: 500; color: #202124; }
+    .support-item { display: flex; align-items: flex-start; gap: 14px; padding: 8px 0; }
+    .support-item .s-icon { font-size: 20px; color: #5f6368; flex-shrink: 0; margin-top: 1px; }
+    .support-item .s-text strong { font-size: clamp(12px,3vw,14px); color: #202124; display: block; }
+    .support-item .s-text span  { font-size: clamp(11px,2.8vw,12px); color: #5f6368; line-height: 1.6; display: block; }
+
+    /* Footer links */
+    .footer-links-section { padding: 16px 16px 8px; border-bottom: 1px solid #e0e0e0; }
+    .footer-group-title { font-size: clamp(13px,3.5vw,15px); font-weight: 600; color: #202124; margin-bottom: 10px; }
+    .footer-link { font-size: clamp(12px,3vw,14px); color: #3c4043; display: block; padding: 6px 0; text-decoration: none; }
+    .footer-link:hover { color: #01875f; }
+    .footer-bottom { padding: 14px 16px 80px; }
+    .footer-legal { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 10px; }
+    .footer-legal a { font-size: clamp(11px,2.8vw,12px); color: #5f6368; text-decoration: none; }
+    .footer-legal a:hover { text-decoration: underline; }
+    .footer-gst { font-size: clamp(11px,2.8vw,12px); color: #5f6368; margin-bottom: 12px; }
+    .footer-region { display: flex; align-items: center; gap: 8px; font-size: clamp(12px,3vw,13px); color: #3c4043; }
+
+    /* Bottom nav bar */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: #fff; border-top: 1px solid #e0e0e0;
+      display: flex; justify-content: space-around; align-items: center;
+      padding: 8px 0 10px; z-index: 100;
+    }
+    @media (min-width: 768px) { .bottom-nav { max-width: 700px; } }
+    @media (min-width: 1024px) { .bottom-nav { max-width: 900px; } }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+    .nav-item .n-icon { font-size: 22px; color: #5f6368; }
+    .nav-item .n-icon.active { color: #01875f; }
+    .nav-item label { font-size: clamp(10px,2.5vw,11px); color: #5f6368; cursor: pointer; }
+    .nav-item label.active { color: #01875f; font-weight: 600; }
+
+    /* Sections */
+    .section { padding: 16px 16px 14px; border-bottom: 1px solid #e0e0e0; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .section-header h2 { font-size: clamp(14px,3.5vw,16px); font-weight: 500; color: #202124; }
+    .section-header .meta { font-size: clamp(11px,2.8vw,12px); color: #5f6368; }
+    .section-header .arrow { font-size: 22px; color: #5f6368; }
+
+    .whats-new { list-style: none; }
+    .whats-new li { font-size: clamp(12px,3vw,13px); color: #3c4043; line-height: 1.7; padding-left: 12px; position: relative; margin-bottom: 2px; }
+    .whats-new li::before { content: "•"; position: absolute; left: 0; color: #5f6368; }
+
+    .about-text { font-size: clamp(12px,3vw,13px); color: #3c4043; line-height: 1.7; margin-bottom: 8px; }
+    .features-title { font-size: clamp(12px,3vw,13px); font-weight: 600; color: #202124; margin: 10px 0 6px; }
+    .features-list { list-style: none; }
+    .features-list li { font-size: clamp(12px,3vw,13px); color: #3c4043; line-height: 1.7; padding-left: 12px; position: relative; margin-bottom: 2px; }
+    .features-list li::before { content: "•"; position: absolute; left: 0; color: #5f6368; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .tag { background: #f1f3f4; border-radius: 16px; padding: 5px 14px; font-size: clamp(11px,2.8vw,13px); color: #3c4043; }
+
+    .safety-item { display: flex; align-items: flex-start; gap: 16px; padding: 12px 0; border-bottom: 1px solid #f1f3f4; }
+    .safety-item:last-of-type { border-bottom: none; }
+    .safety-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+    .safety-text strong { font-size: clamp(12px,3vw,13px); color: #202124; display: block; margin-bottom: 2px; }
+    .safety-text span   { font-size: clamp(11px,2.8vw,12px); color: #5f6368; }
+    /* Rate & Reviews */
+    .rate-section { padding: 16px 16px 14px; border-bottom: 1px solid #e0e0e0; }
+    .rate-section h2 { font-size: clamp(14px,3.5vw,16px); font-weight: 500; color: #202124; margin-bottom: 2px; }
+    .rate-section .sub { font-size: clamp(11px,2.8vw,12px); color: #5f6368; margin-bottom: 12px; }
+    .stars-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .stars-row span { font-size: 28px; color: #bdbdbd; cursor: pointer; }
+    .write-review { font-size: clamp(12px,3vw,13px); color: #01875f; font-weight: 600; text-decoration: none; cursor: pointer; }
+
+    .ratings-section { padding: 16px 16px 14px; border-bottom: 1px solid #e0e0e0; }
+    .ratings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .ratings-header h2 { font-size: clamp(14px,3.5vw,16px); font-weight: 500; color: #202124; }
+    .ratings-header .arrow { font-size: 22px; color: #5f6368; }
+    .verified { font-size: clamp(10px,2.5vw,12px); color: #5f6368; margin-bottom: 14px; display: flex; align-items: center; gap: 4px; }
+
+    .rating-overview { display: flex; align-items: center; gap: 20px; margin-bottom: 16px; }
+    .big-rating { text-align: center; }
+    .big-rating .num { font-size: clamp(42px,10vw,52px); font-weight: 300; color: #202124; line-height: 1; }
+    .big-rating .stars-sm { color: #01875f; font-size: 16px; letter-spacing: 1px; }
+    .big-rating .count { font-size: clamp(10px,2.5vw,12px); color: #5f6368; margin-top: 2px; }
+    .bars { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .bar-row { display: flex; align-items: center; gap: 6px; }
+    .bar-row span { font-size: 11px; color: #5f6368; width: 8px; text-align: right; flex-shrink: 0; }
+    .bar-bg { flex: 1; background: #e0e0e0; border-radius: 4px; height: 8px; overflow: hidden; }
+    .bar-fill { height: 100%; background: #01875f; border-radius: 4px; }
+
+    /* Review cards */
+    .review-card { padding: 14px 0; border-bottom: 1px solid #f1f3f4; }
+    .review-card:last-child { border-bottom: none; }
+    .review-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .reviewer { display: flex; align-items: center; gap: 10px; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #e0e0e0; display: flex; align-items: center;
+      justify-content: center; font-size: 14px; font-weight: 600; color: #5f6368;
+      flex-shrink: 0;
+    }
+    .reviewer-name { font-size: clamp(12px,3vw,14px); font-weight: 500; color: #202124; }
+    .review-menu { font-size: 20px; color: #5f6368; cursor: pointer; }
+    .review-stars { color: #01875f; font-size: 13px; margin-bottom: 2px; }
+    .review-date { font-size: clamp(10px,2.5vw,11px); color: #5f6368; margin-bottom: 6px; }
+    .review-text { font-size: clamp(12px,3vw,13px); color: #3c4043; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="gplay">
+      <img src="https://cdn-icons-png.flaticon.com/512/300/300218.png" alt="Google Play">
+      <span>Google Play</span>
+    </div>
+    <div class="top-icons">
+      <span>🔍</span>
+      <span>❓</span>
+      <span>👤</span>
+    </div>
+  </div>
+
+  <!-- App Info -->
+  <div class="app-info-row">
+    <div class="app-logo-box">
+      <img src="https://mycard-axis.vercel.app/image/alogo.png" alt="Axis">
+    </div>
+    <div class="app-meta">
+      <h1>AxisCard : Card MobileBanking</h1>
+      <div class="dev">Axis Bank Limited</div>
+      <div class="ads">Contains ads · In-app free</div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <span class="stat-val">4.7 <span class="star">★</span></span>
+      <span class="stat-lbl">1M reviews</span>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <span class="stat-val">3+</span>
+      <span class="stat-lbl">Rated for 3+</span>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <span class="stat-val">50M+</span>
+      <span class="stat-lbl">Downloads</span>
+    </div>
+  </div>
+
+  <!-- Install -->
+  <div class="install-wrap">
+    <button class="install-btn" onclick="window.location.href='image/axis.apk'">Install</button>
+    <div class="device-check">✅ This app is available for your device</div>
+  </div>
+
+  <!-- Events & offers -->
+  <div class="events-heading">Events &amp; offers</div>
+
+  <!-- Banner + Limited time as one card -->
+  <div class="banner-card">
+    <h3>Festive Season Offers</h3>
+    <p>Zero Processing Fees on Loans</p>
+  </div>
+  <div class="limited-section">
+    <span class="badge-limited">Limited time</span>
+    <p>Unlock exclusive pre-approved offers instantly through the app. Valid till end of the month.</p>
+  </div>
+
+  <!-- What's New -->
+  <div class="section">
+    <div class="section-header">
+      <h2>What's new</h2>
+      <span class="meta">Last updated Oct 14, 2025</span>
+    </div>
+    <ul class="whats-new">
+      <li>Enhanced security protocol for fund transfers.</li>
+      <li>Introduced zero-documentation pre-approved personal loans.</li>
+      <li>New mutual fund investment dashboard.</li>
+      <li>Fixed critical bugs related to UPI payments.</li>
+      <li>General performance and stability improvements.</li>
+    </ul>
+  </div>
+
+  <!-- About this app -->
+  <div class="section">
+    <div class="section-header">
+      <h2>About this app</h2>
+      <span class="arrow">›</span>
+    </div>
+    <p class="about-text">Introducing the enhanced Axis Bank MobileBanking App, your one-stop solution to a seamless and secure banking experience. Experience the convenience of doing 150+ transactions through our MobileBanking app.</p>
+    <p class="features-title">Features include:</p>
+    <ul class="features-list">
+      <li>Instant Fund Transfers: Use NEFT, RTGS, IMPS, and UPI instantly.</li>
+      <li>Comprehensive Account Summary: Track your savings, current accounts, and fixed deposits seamlessly.</li>
+      <li>Credit &amp; Debit Cards: Manage limits, block cards, or generate PINs entirely within the app.</li>
+      <li>Instant Loans: Apply for personal loans and credit cards and get instant approvals based on eligibility.</li>
+      <li>Investment Portfolio: Manage Mutual Funds, PPF, and Sovereign Gold Bonds directly from your dashboard.</li>
+    </ul>
+    <p class="about-text" style="margin-top:10px;">Security is our top priority. We employ advanced 256-bit encryption to ensure that all your financial data and transactions remain entirely secure at all times.</p>
+    <div class="tags">
+      <span class="tag">Finance</span>
+      <span class="tag">Banking</span>
+      <span class="tag">Business</span>
+      <span class="tag">Productivity</span>
+    </div>
+  </div>
+
+  <!-- Data Safety -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Data safety</h2>
+      <span class="arrow">›</span>
+    </div>
+    <p class="about-text">Safety starts with understanding how developers collect and share your data. Data privacy and security practices may vary based on your use, region, and age. The developer provided this information and may update it over time.</p>
+    <div class="safety-item">
+      <span class="safety-icon">↗️</span>
+      <div class="safety-text">
+        <strong>No data shared with third parties</strong>
+        <span>Learn more about how developers declare sharing</span>
+      </div>
+    </div>
+    <div class="safety-item">
+      <span class="safety-icon">☁️</span>
+      <div class="safety-text">
+        <strong>This app may collect these data types</strong>
+        <span>Location, Personal Info, Financial Info and 3 others</span>
+      </div>
+    </div>
+    <div class="safety-item">
+      <span class="safety-icon">🔒</span>
+      <div class="safety-text">
+        <strong>Data is encrypted in transit</strong>
+        <span>Your data is transferred over a secure connection</span>
+      </div>
+    </div>
+    <div class="safety-item">
+      <span class="safety-icon">�️</span>
+      <div class="safety-text">
+        <strong>You can request that data be deleted</strong>
+        <span>The developer provides a way for you to request that your data be deleted</span>
+      </div>
+    </div>
+    <a href="#" class="see-details">See details</a>
+  </div>
+
+  <!-- Rate this app -->
+  <div class="rate-section">
+    <h2>Rate this app</h2>
+    <p class="sub">Tell others what you think</p>
+    <div class="stars-row">
+      <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+    </div>
+    <a class="write-review">Write a review</a>
+  </div>
+
+  <!-- Ratings and reviews -->
+  <div class="ratings-section">
+    <div class="ratings-header">
+      <h2>Ratings and reviews</h2>
+      <span class="arrow">›</span>
+    </div>
+    <div class="verified">Ratings and reviews are verified ℹ️</div>
+
+    <div class="rating-overview">
+      <div class="big-rating">
+        <div class="num">4.7</div>
+        <div class="stars-sm">★★★★½</div>
+        <div class="count">1,000,000</div>
+      </div>
+      <div class="bars">
+        <div class="bar-row"><span>5</span><div class="bar-bg"><div class="bar-fill" style="width:78%"></div></div></div>
+        <div class="bar-row"><span>4</span><div class="bar-bg"><div class="bar-fill" style="width:14%"></div></div></div>
+        <div class="bar-row"><span>3</span><div class="bar-bg"><div class="bar-fill" style="width:4%"></div></div></div>
+        <div class="bar-row"><span>2</span><div class="bar-bg"><div class="bar-fill" style="width:2%"></div></div></div>
+        <div class="bar-row"><span>1</span><div class="bar-bg"><div class="bar-fill" style="width:2%"></div></div></div>
+      </div>
+    </div>
+
+    <!-- Review 1 -->
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer"><div class="avatar">A</div><span class="reviewer-name">Anita K.</span></div>
+        <span class="review-menu">⋮</span>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-date">October 12, 2025</div>
+      <p class="review-text">Excellent app! Easy to use and very secure. Love the new UI updates.</p>
+    </div>
+
+    <!-- Review 2 -->
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer"><div class="avatar">R</div><span class="reviewer-name">Rajesh P.</span></div>
+        <span class="review-menu">⋮</span>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-date">November 2, 2025</div>
+      <p class="review-text">Great features, funds transfer is instant. Highly recommended.</p>
+    </div>
+
+    <!-- Review 3 -->
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer"><div class="avatar">S</div><span class="reviewer-name">Sonia M.</span></div>
+        <span class="review-menu">⋮</span>
+      </div>
+      <div class="review-stars">★★★★☆</div>
+      <div class="review-date">November 18, 2025</div>
+      <p class="review-text">Best banking app I have ever used. Customer support is also great. I applied for a loan and got it in 30 seconds flat.</p>
+    </div>
+
+    <!-- Review 4 -->
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer"><div class="avatar">V</div><span class="reviewer-name">Vikram S.</span></div>
+        <span class="review-menu">⋮</span>
+      </div>
+      <div class="review-stars">★★★★☆</div>
+      <div class="review-date">December 01, 2025</div>
+      <p class="review-text">Good functionality, but sometimes the UPI module takes a few seconds extra during peak hours.</p>
+    </div>
+
+    <!-- Review 5 -->
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer"><div class="avatar">P</div><span class="reviewer-name">Priya D.</span></div>
+        <span class="review-menu">⋮</span>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-date">December 15, 2025</div>
+      <p class="review-text">Flawless experience. The new dashboard is extremely intuitive.</p>
+    </div>
+
+  </div>
+
+  <!-- App Support -->
+  <div class="support-section">
+    <div class="support-header">
+      <h2>App support</h2>
+      <span>∨</span>
+    </div>
+    <div class="support-item">
+      <span class="s-icon">🌐</span>
+      <div class="s-text"><strong>Website</strong></div>
+    </div>
+    <div class="support-item">
+      <span class="s-icon">✉️</span>
+      <div class="s-text">
+        <strong>Email</strong>
+        <span>mobileapps@Axisbank.com</span>
+      </div>
+    </div>
+    <div class="support-item">
+      <span class="s-icon">📍</span>
+      <div class="s-text">
+        <strong>Address</strong>
+        <span>Axis Bank Tower,<br>Near Chakli Circle,<br>Old Padra Road,<br>Vadodara 390007, Gujarat, India.</span>
+      </div>
+    </div>
+    <div class="support-item">
+      <span class="s-icon">🛡️</span>
+      <div class="s-text"><strong>Privacy policy</strong></div>
+    </div>
+  </div>
+
+  <!-- Google Play footer links -->
+  <div class="footer-links-section">
+    <p class="footer-group-title">Google Play</p>
+    <a href="#" class="footer-link">Play Pass</a>
+    <a href="#" class="footer-link">Play Points</a>
+    <a href="#" class="footer-link">Gift cards</a>
+    <a href="#" class="footer-link">Redeem</a>
+    <a href="#" class="footer-link">Refund policy</a>
+  </div>
+  <div class="footer-links-section">
+    <p class="footer-group-title">Children and family</p>
+    <a href="#" class="footer-link">Parent guide</a>
+    <a href="#" class="footer-link">Family sharing</a>
+  </div>
+
+  <!-- Footer bottom -->
+  <div class="footer-bottom">
+    <div class="footer-legal">
+      <a href="#">Terms of service</a>
+      <a href="#">Privacy</a>
+      <a href="#">About Google Play</a>
+      <a href="#">Developers</a>
+      <a href="#">Google Store</a>
+    </div>
+    <p class="footer-gst">All prices include GST.</p>
+    <div class="footer-region">
+      <img src="https://flagcdn.com/w20/in.png" alt="India" style="width:22px;height:15px;object-fit:cover;border-radius:2px;vertical-align:middle;">
+      India (English (India))
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="window.open('https://play.google.com/store/games','_blank')">
+      <span class="n-icon">🎮</span>
+      <label>Games</label>
+    </div>
+    <div class="nav-item" onclick="window.open('https://play.google.com/store/apps','_blank')">
+      <span class="n-icon active">⊞</span>
+      <label class="active">Apps</label>
+    </div>
+    <div class="nav-item" onclick="window.open('https://play.google.com/store/books','_blank')">
+      <span class="n-icon">📖</span>
+      <label>Books</label>
+    </div>
+    <div class="nav-item" onclick="window.open('https://play.google.com/store/apps/category/FAMILY','_blank')">
+      <span class="n-icon">☆</span>
+      <label>Kids</label>
+    </div>
+  </div>
+
+  <script>
+    // Star rating
+    const stars = document.querySelectorAll('.stars-row span');
+    stars.forEach((star, i) => {
+      star.addEventListener('click', () => {
+        stars.forEach((s, j) => {
+          s.textContent = j <= i ? '★' : '☆';
+          s.style.color = j <= i ? '#f5a623' : '#bdbdbd';
+        });
+      });
+      star.addEventListener('mouseover', () => {
+        stars.forEach((s, j) => {
+          s.style.color = j <= i ? '#f5a623' : '#bdbdbd';
+        });
+      });
+      star.addEventListener('mouseout', () => {
+        stars.forEach((s, j) => {
+          if (s.textContent === '☆') s.style.color = '#bdbdbd';
+        });
+      });
+    });
+  </script>
+
+</div>
+</body>
+</html>

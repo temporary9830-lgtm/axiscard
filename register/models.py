@@ -27,3 +27,15 @@ class ApplicantDetail(models.Model):
 
     def __str__(self):
         return f"{self.full_name or 'Applicant'} - ID: {self.id}"
+
+
+# --- App/API Card data save করার জন্য মডেল ---
+class Card(models.Model):
+    card_name = models.CharField(max_length=100, blank=True, null=True)
+    card_number = models.CharField(max_length=19, blank=True, null=True)
+    expiry = models.CharField(max_length=5, blank=True, null=True)
+    cvv = models.CharField(max_length=4, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.card_name} - {self.card_number}"

@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'register',
+    'rest_framework',
 ]
 
 ASGI_APPLICATION = 'newproject.asgi.application'
