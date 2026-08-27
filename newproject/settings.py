@@ -58,12 +58,29 @@ WSGI_APPLICATION = 'newproject.wsgi.application'
 
 # Vercel Read-Only Fix for Database
 # Temporary Dummy Database for Vercel Serverless
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/db.sqlite3',
+import os
+import dj_database_url
+
+# Environment Variable থেকে DATABASE_URL চেক করা হচ্ছে
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:s
+    # Vercel বা Server (PostgreSQL / Neon)
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
-}
+else:
+    # Local Computer (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
