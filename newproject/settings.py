@@ -64,7 +64,7 @@ import dj_database_url
 # Environment Variable থেকে DATABASE_URL চেক করা হচ্ছে
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-if DATABASE_URL:s
+if DATABASE_URL:
     # Vercel বা Server (PostgreSQL / Neon)
     DATABASES = {
         'default': dj_database_url.config(
