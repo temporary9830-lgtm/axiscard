@@ -1,5 +1,4 @@
-django
-djangorestframework
-gunicorn
+Django>=4.2
+dj-database-url
 whitenoise
-pillow
+gunicorn
