@@ -57,11 +57,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'newproject.wsgi.application'
 
 # Vercel Read-Only Fix for Database
+# Temporary Dummy Database for Vercel Serverless
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': '/tmp/db.sqlite3',
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
