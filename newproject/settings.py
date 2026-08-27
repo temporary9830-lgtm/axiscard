@@ -61,20 +61,16 @@ WSGI_APPLICATION = 'newproject.wsgi.application'
 import os
 import dj_database_url
 
-# Environment Variable থেকে DATABASE_URL চেক করা হচ্ছে
-DATABASE_URL = os.getenv('DATABASE_URL')
+# Vercel বা Server-এর Environment Variable নেওয়া হচ্ছে
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
-    # Vercel বা Server (PostgreSQL / Neon)
+    # Vercel-এ থাকলে সবসময় PostgreSQL ব্যবহার করবে
     DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=True
-        )
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     }
 else:
-    # Local Computer (SQLite)
+    # লোকাল পিসির জন্য SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -82,6 +78,8 @@ else:
         }
     }
 
+
+    
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
