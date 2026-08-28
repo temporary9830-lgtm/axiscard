@@ -22,7 +22,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'register',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +56,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'newproject.wsgi.application'
 
 # ================= DATABASE CONFIGURATION =================
+# ================= DATABASE CONFIGURATION =================
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
@@ -73,6 +73,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+# =========================================================
 # =========================================================
 
 AUTH_PASSWORD_VALIDATORS = [
