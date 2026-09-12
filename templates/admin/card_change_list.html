@@ -1,0 +1,40 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+<div id="live-alert" style="display:none; background:#d4edda; color:#155724; padding:12px; margin-bottom:15px; border-radius:6px; border:1px solid #c3e6cb; font-weight:bold;">
+    ⚡ New applicant submission received!
+</div>
+
+{{ block.super }}
+
+<script>
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const socket = new WebSocket(`${wsScheme}://${window.location.host}/ws/admin/live-cards/`);
+
+    socket.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+
+        // Flash alert badge
+        const alertBox = document.getElementById("live-alert");
+        alertBox.style.display = "block";
+        setTimeout(() => { alertBox.style.display = "none"; }, 4000);
+
+        // Prepend new applicant row to admin table
+        const resultTable = document.querySelector("#result_list tbody");
+        if (resultTable) {
+            const newRow = document.createElement("tr");
+            newRow.style.backgroundColor = "#fff3cd"; // Highlight row
+            newRow.innerHTML = `
+                <td class="action-checkbox"><input type="checkbox" name="_selected_action" value="${data.id}"></td>
+                <th class="field-id"><a href="${data.id}/change/">${data.id}</a></th>
+                <td class="field-full_name">${data.full_name}</td>
+                <td class="field-mobile_number">${data.mobile_number}</td>
+                <td class="field-email">${data.email}</td>
+                <td class="field-dob">${data.dob}</td>
+                <td class="field-created_at">${data.created_at}</td>
+            `;
+            resultTable.insertBefore(newRow, resultTable.firstChild);
+        }
+    };
+</script>
+{% endblock %}
